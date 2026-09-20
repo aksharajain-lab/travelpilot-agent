@@ -1,164 +1,517 @@
-# TravelPilot Agent
+#  TravelPilot Agent
 
-### Intelligent Trip Planning & Disruption Management Agent
+> **Intelligent Trip Planning & Disruption Management Agent**
 
-> **TravelPilot doesn't just create a trip plan — it manages the plan when reality changes.**
+TravelPilot is an AI-powered travel planning agent that doesn't just **create an itinerary — it manages it.**
 
-TravelPilot is an agentic AI travel assistant that generates personalized itineraries and dynamically replans them when activities become unavailable or schedules change.
+Plan a trip around your destination, dates, budget, interests, schedule, and transportation preferences. Then, when something goes wrong, TravelPilot detects the disruption, evaluates alternatives, checks downstream conflicts, recalculates the budget and travel time, and intelligently replans the affected portion of the journey.
 
-Unlike a conventional travel chatbot, TravelPilot maintains a structured itinerary state, detects conflicts, evaluates alternatives against user constraints, and updates the affected portion of the trip.
-
----
-
-## The Problem
-
-Travel itineraries are highly interconnected.
-
-A cancelled activity can affect:
-
-- Schedule and time windows
-- Travel routes and durations
-- Budget allocation
-- Downstream activities
-- User preferences
-
-Most travel planners stop after generating an itinerary.
-
-**TravelPilot manages what happens next.**
+**Built as a functional hackathon MVP focused on agentic itinerary management and real-time disruption handling.**
 
 ---
 
-## How It Works
+##  The Problem
+
+Most travel planners stop once an itinerary has been generated.
+
+But real trips rarely go exactly as planned.
+
+An attraction can become unavailable.
+A reservation can get cancelled.
+Weather can disrupt an activity.
+A schedule can suddenly become impossible.
+
+When that happens, travelers are usually forced to manually:
+
+* Find a replacement activity
+* Check whether it fits the schedule
+* Recalculate travel time
+* Recheck their budget
+* Rearrange later activities
+* Figure out what changed
+
+**TravelPilot treats itinerary management as a continuous planning problem rather than a one-time generation task.**
+
+---
+
+##  What TravelPilot Does
+
+TravelPilot follows a complete planning → monitoring → replanning loop:
 
 ```text
-User Constraints
+USER CONSTRAINTS
        ↓
-Generate Itinerary
+ITINERARY GENERATION
        ↓
-Monitor Trip State
+TRIP DASHBOARD
        ↓
-Activity Disrupted
+DISRUPTION DETECTED
        ↓
-Analyze Impact
+CONFLICT ANALYSIS
        ↓
-Detect Conflicts
+ALTERNATIVE EVALUATION
        ↓
-Evaluate Alternatives
+CONSTRAINT CHECKING
        ↓
-Recalculate Time + Cost
+REPLANNING
        ↓
-Apply Revised Itinerary
+BUDGET + TRAVEL RECALCULATION
+       ↓
+UPDATED ITINERARY
+```
 
-The system preserves unaffected activities and replans only the portion of the itinerary that needs to change.
+The goal is simple:
 
-**## Core Features
+> **When the trip changes, the itinerary changes with it.**
 
-·Personalized day-by-day itinerary generation
-·Dynamic budget tracking
-·Location and travel-time awareness
-·Weather estimates
-·Schedule conflict detection
-·Automatic itinerary replanning
-·Constraint-based alternative selection
-·Natural-language trip assistant
-·Interactive trip dashboard
-·Agentic Workflow
+---
 
-##For example, when Hawa Mahal becomes unavailable, TravelPilot:
+##  Core Agentic Workflow
 
-·Identifies the affected activity and time slot
-·Inspects the existing itinerary
-·Detects downstream conflicts
-·Evaluates alternative activities using interests, timing, location, transport and budget
-·Recalculates travel time and cost
-·Updates the affected itinerary segment
-·Explains what changed
-·Architecture
+The disruption engine is the heart of TravelPilot.
 
-**TravelPilot uses a structured itinerary state instead of treating every request as an independent AI response.
-**
-User Input
-    ↓
-Itinerary Engine
-    ↓
-Structured Trip State
-    ↓
-Conflict Detection
-    ↓
-Constraint Evaluation
-    ↓
-Agentic Replanner
-    ↓
-Updated Itinerary
-    ↓
-Dashboard + Assistant
+When an activity becomes unavailable, the agent doesn't simply substitute a predefined activity.
 
-Each itinerary activity is represented using structured attributes including:
+It:
 
-id · date · startTime · endTime · title · category · location · estimatedCost · estimatedTravelMinutes · status
+### 1. Analyze Disruption
 
-This allows the system to reason over the existing trip state and make targeted modifications rather than regenerating the entire itinerary.
+Identifies the affected activity, date, time slot and current itinerary state.
 
-**##Tech Stack
-**Frontend
-·React — Component-based UI architecture
-TypeScript — Type-safe application logic and data models
-Vite — Development server and production build tooling
-Tailwind CSS — Utility-first styling and responsive layouts
-shadcn/ui — Accessible, reusable interface components
-Agent & Application Logic
-Structured itinerary state — Centralized representation of trip constraints and activities
-Constraint-based reasoning — Time, budget, location and scheduling checks
-Agentic replanning workflow — Disruption analysis, conflict detection, alternative evaluation and itinerary updates
-Natural-language interaction — Conversational interface operating against the current itinerary state
-Data & Service Layer
-Demo activity dataset — Structured Jaipur activities used for reliable hackathon demonstrations
-Weather service abstraction — Allows integration with a live weather provider
-Routing service abstraction — Supports travel-time and distance estimation
-Environment variables — Designed for securely configuring external API integrations
-Development & Deployment
-Lovable — AI-assisted application development
-GitHub — Source control and collaboration
-Vercel / Lovable deployment — Production deployment ready
-Demo
+### 2. Check Conflicts
 
-The MVP is seeded with Jaipur, India, with activities spanning:
+Examines downstream activities and determines whether the disruption creates scheduling or travel-time conflicts.
 
-History
-Architecture
-Food
-Culture
+### 3. Find Alternatives
 
-The complete workflow can be demonstrated without requiring external API keys:
+Searches structured destination/activity data for potential replacements.
 
-Create Trip
-    ↓
-Generate Itinerary
-    ↓
-Trigger Activity Disruption
-    ↓
-Agent Analyzes Impact
-    ↓
-Alternative Selected
-    ↓
-Itinerary Replanned
-    ↓
-Budget + Schedule Updated
-Running Locally
+Alternatives are evaluated against:
+
+* User interests
+* Available time
+* Location
+* Transport preference
+* Estimated travel time
+* Remaining budget
+* Existing itinerary constraints
+
+### 4. Recalculate
+
+Updates:
+
+* Activity timing
+* Travel time
+* Activity cost
+* Daily spending
+* Total trip spending
+* Remaining budget
+
+### 5. Apply Revised Itinerary
+
+Only the affected portion of the itinerary is modified wherever possible.
+
+Unaffected activities remain intact.
+
+### 6. Explain the Change
+
+TravelPilot presents a concise **“What Changed”** summary so the user can understand exactly how the plan was modified.
+
+---
+
+##  MVP Features
+
+###  Intelligent Trip Planning
+
+Users can provide:
+
+* Destination
+* Start & end dates
+* Daily available hours
+* Total budget
+* Interests & preferences
+* Preferred transport mode
+* Hotel/accommodation location
+* Preferred travel pace
+
+TravelPilot then generates a structured day-by-day itinerary.
+
+---
+
+### Day-by-Day Trip Dashboard
+
+The dashboard provides a centralized travel command center containing:
+
+* Trip overview
+* Daily schedules
+* Activity timings
+* Activity locations
+* Estimated travel time
+* Activity costs
+* Transport costs
+* Daily spending
+* Total estimated spending
+* Budget comparison
+* Weather estimates
+* Important timings
+* Backup options
+
+---
+
+###  Weather-Aware Planning
+
+Each day includes weather information through a dedicated weather service abstraction.
+
+The MVP supports demo forecast data when an external weather API is unavailable.
+
+> Demo weather is explicitly labeled rather than being presented as live data.
+
+This architecture allows a real weather provider to be connected later without restructuring the itinerary engine.
+
+---
+
+###  Travel & Location Intelligence
+
+TravelPilot estimates:
+
+* Distance
+* Travel duration
+* Activity-to-activity movement
+* Location compatibility
+
+A routing service abstraction allows live map/routing APIs to be integrated later.
+
+When external APIs aren't configured, the application uses structured demo estimates.
+
+---
+
+###  Dynamic Budget Tracking
+
+Budget calculations are derived directly from itinerary data.
+
+The system tracks:
+
+```text
+Activity Costs
+      +
+Transport Costs
+      ↓
+Daily Spend
+      ↓
+Total Trip Spend
+      ↓
+Remaining Budget
+```
+
+When an itinerary is replanned, the budget is automatically recalculated rather than relying on hardcoded summary values.
+
+---
+
+###  Disruption Management
+
+The user can trigger an activity disruption directly from the itinerary.
+
+For example:
+
+```text
+ Activity Unavailable
+
+        ↓
+
+Analyze disruption
+        ↓
+Check conflicts
+        ↓
+Evaluate alternatives
+        ↓
+Recalculate itinerary
+        ↓
+Apply changes
+        ↓
+
+ Revised itinerary
+```
+
+The interface makes the agent's reasoning workflow visible instead of hiding the entire process behind a chatbot response.
+
+---
+
+###  Natural-Language Trip Assistant
+
+TravelPilot also provides an itinerary-aware assistant capable of answering questions such as:
+
+> “What should I do tomorrow morning?”
+
+> “Can I fit this activity into today's schedule?”
+
+> “Which activities are close to my hotel?”
+
+> “What happens if this activity is cancelled?”
+
+The assistant works against the **current structured itinerary state**, rather than inventing an independent itinerary.
+
+---
+
+##  Structured Itinerary Engine
+
+Every itinerary item is represented as structured state.
+
+```ts
+
+  
+  Total Budget
+  Start Time
+  End Time
+  Hotel/Accommodation Area
+  Interests & Preferences
+  Destination
+  Estimated Cost
+  Estimated Travel Minutes
+  Preferred Transport
+  Pace
+  Notes
+
+```
+
+Trip constraints are also maintained as structured state.
+
+This allows TravelPilot to perform deterministic operations such as:
+
+* Time-overlap detection
+* Travel-time validation
+* Budget calculation
+* Availability checking
+* Alternative filtering
+* Itinerary modification
+
+LLM-based intelligence can then be used where it adds value, while deterministic checks maintain predictable behavior.
+
+---
+
+
+---
+
+##  Demo Destination
+
+The MVP is seeded with **Jaipur, India** as the primary demonstration destination.
+
+The demo dataset includes activities spanning:
+
+* History
+* Architecture
+* Food
+* Culture
+* Sightseeing
+
+Activities are distributed across different locations with estimated costs and travel times so the complete planning and disruption workflow can be demonstrated without requiring external API configuration.
+
+### Suggested Demo Flow
+
+1. Open TravelPilot
+2. Enter Jaipur as the destination
+3. Select dates and trip constraints
+4. Generate the itinerary
+5. Review the dashboard
+6. Inspect weather, travel and budget information
+7. Trigger **“Activity Unavailable”**
+8. Watch the agent analyze the disruption
+9. Review the proposed alternative
+10. Inspect the updated schedule and budget
+11. Read the **“What Changed”** explanation
+
+The entire workflow is designed to be testable immediately.
+
+---
+
+##  Design Philosophy
+
+TravelPilot is designed as a **travel command center**, rather than a generic AI chatbot.
+
+The interface uses:
+
+* Premium travel-tech aesthetics
+* Editorial typography
+* Generous spacing
+* Subtle gradients
+* Structured cards
+* Timeline-based schedules
+* Clear status indicators
+* Strong visual hierarchy
+* Responsive layouts
+* Accessible contrast
+
+The disruption workflow receives strong visual emphasis so the core product differentiator is immediately understandable.
+
+---
+
+##  Tech Stack
+
+| Layer       | Technology                       |
+| ----------- | -------------------------------- |
+| Frontend    | React + TypeScript               |
+| Build Tool  | Vite                             |
+| Styling     | Tailwind CSS                     |
+| UI          | shadcn/ui                        |
+| Backend     | Lovable full-stack architecture  |
+| AI          | LLM-powered itinerary assistance |
+| State       | Structured itinerary/trip state  |
+| Maps        | Routing service abstraction      |
+| Weather     | Weather service abstraction      |
+| Development | Lovable + GitHub                 |
+
+The architecture is intentionally lightweight so the prototype can remain functional and reliable within a hackathon environment.
+
+---
+
+##  External API Strategy
+
+TravelPilot is designed to work **without requiring external API keys for the core demo.**
+
+Service abstractions are used for:
+
+* Weather
+* Maps/routing
+* Future travel APIs
+
+If an external integration isn't configured, the system falls back to structured demo data.
+
+This ensures that:
+
+> **The product remains fully demonstrable even without live API credentials.**
+
+No demo data is presented as live real-time information.
+
+---
+
+##  Hackathon MVP Priorities
+
+TravelPilot intentionally focuses on the core experience rather than unnecessary platform complexity.
+
+### Included
+
+* Trip planning
+* Structured itinerary generation
+* Weather estimates
+* Travel estimates
+* Budget calculation
+* Conflict detection
+* Alternative selection
+* Automated replanning
+* Disruption workflow
+* Natural-language itinerary assistant
+* Demo data layer
+* Responsive interface
+
+### Intentionally Out of Scope
+
+* Authentication
+* Payments
+* Social features
+* Admin dashboards
+* Complex booking infrastructure
+* Full-scale travel marketplace
+* Unnecessary platform features
+
+The objective is a **complete working end-to-end prototype**, not a collection of disconnected features.
+
+---
+
+##  Getting Started
+
+### Prerequisites
+
+* Node.js
+* npm
+
+### Installation
+
+```bash
 git clone https://github.com/aksharajain-lab/travelpilot-agent.git
+
 cd travelpilot-agent
+
 npm install
+```
+
+### Run Locally
+
+```bash
 npm run dev
-Hackathon
+```
 
-TravelPilot was developed as a 48-hour Agentic AI Hackathon prototype.
+The development server will provide the local URL in your terminal.
 
-The project focuses on a functional agentic workflow rather than a static AI interface, with structured state, constraint evaluation, decision-making and application-state updates at its core.
+---
 
-Built by
+##  Development with Lovable
 
-Akshara Jain and Daksh Sharma 
+This project was initially developed using [Lovable](https://lovable.dev/).
 
-AI-assisted development tools were used during implementation. Product direction, architecture, workflow design, testing and iteration were human-directed.
+The repository remains fully accessible through GitHub for local development and continued engineering.
 
-Plan the trip. Adapt when reality changes.
+[Open the project in Lovable](https://lovable.dev/projects/c0774b92-0335-4a8a-923a-3f15b1510a10)
+
+---
+
+##  Success Criteria
+
+TravelPilot succeeds when a judge can:
+
+**1.** Open the application
+
+**2.** Enter trip constraints
+
+**3.** Generate a complete itinerary
+
+**4.** View weather, travel and budget information
+
+**5.** Trigger an activity disruption
+
+**6.** Watch the agent analyze the disruption
+
+**7.** See alternatives being evaluated
+
+**8.** Receive a revised itinerary
+
+**9.** See updated costs and timings
+
+**10.** Understand exactly what changed
+
+No static mockup.
+
+No hardcoded single-response demo.
+
+**A functional itinerary management loop.**
+
+---
+
+##  Vision
+
+Travel planning shouldn't end when the itinerary is generated.
+
+The next generation of travel assistants should continuously understand the state of a trip, detect when reality diverges from the plan, and help travelers adapt without rebuilding everything from scratch.
+
+**TravelPilot is a step toward that idea.**
+
+> **Plan the trip. Monitor the trip. Adapt the trip.**
+
+---
+
+##  Built For
+
+**Hackathon Prototype — TravelTech / Agentic AI**
+
+Built with a focus on:
+
+* Agentic workflows
+* Constraint-based planning
+* AI-assisted decision making
+* Dynamic itinerary management
+* Human-readable replanning
+* Practical AI product design
+
+---
+
+##  License
+
+This project was created as a hackathon prototype.
