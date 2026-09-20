@@ -51,31 +51,32 @@ Apply Revised Itinerary
 
 The system preserves unaffected activities and replans only the portion of the itinerary that needs to change.
 
-Core Features
-Personalized day-by-day itinerary generation
-Dynamic budget tracking
-Location and travel-time awareness
-Weather estimates
-Schedule conflict detection
-Automatic itinerary replanning
-Constraint-based alternative selection
-Natural-language trip assistant
-Interactive trip dashboard
-Agentic Workflow
+**## Core Features
 
-For example, when Hawa Mahal becomes unavailable, TravelPilot:
+·Personalized day-by-day itinerary generation
+·Dynamic budget tracking
+·Location and travel-time awareness
+·Weather estimates
+·Schedule conflict detection
+·Automatic itinerary replanning
+·Constraint-based alternative selection
+·Natural-language trip assistant
+·Interactive trip dashboard
+·Agentic Workflow
 
-Identifies the affected activity and time slot
-Inspects the existing itinerary
-Detects downstream conflicts
-Evaluates alternative activities using interests, timing, location, transport and budget
-Recalculates travel time and cost
-Updates the affected itinerary segment
-Explains what changed
-Architecture
+##For example, when Hawa Mahal becomes unavailable, TravelPilot:
 
-TravelPilot uses a structured itinerary state instead of treating every request as an independent AI response.
+·Identifies the affected activity and time slot
+·Inspects the existing itinerary
+·Detects downstream conflicts
+·Evaluates alternative activities using interests, timing, location, transport and budget
+·Recalculates travel time and cost
+·Updates the affected itinerary segment
+·Explains what changed
+·Architecture
 
+**TravelPilot uses a structured itinerary state instead of treating every request as an independent AI response.
+**
 User Input
     ↓
 Itinerary Engine
@@ -98,9 +99,9 @@ id · date · startTime · endTime · title · category · location · estimated
 
 This allows the system to reason over the existing trip state and make targeted modifications rather than regenerating the entire itinerary.
 
-Tech Stack
-Frontend
-React — Component-based UI architecture
+**##Tech Stack
+**Frontend
+·React — Component-based UI architecture
 TypeScript — Type-safe application logic and data models
 Vite — Development server and production build tooling
 Tailwind CSS — Utility-first styling and responsive layouts
